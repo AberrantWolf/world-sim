@@ -1,0 +1,4 @@
+If:
+	PathMatch: 'cuda/.*\.(cu|cuh)'
+Completion:
+	HeaderInsertion: Never
