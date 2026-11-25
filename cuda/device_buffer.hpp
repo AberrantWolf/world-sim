@@ -71,9 +71,13 @@ public:
       return count_;
   }
 
+  size_t size() const noexcept {
+      return count_ * sizeof(float);
+  }
+
   SimResult zero() noexcept {
       CUDA_TRY(cudaSetDevice(device_));
-      CUDA_TRY(cudaMemset(data(), 0, count() * sizeof(float)));
+      CUDA_TRY(cudaMemset(data(), 0, size()));
 
       return SIM_RESULT_OKAY;
   }

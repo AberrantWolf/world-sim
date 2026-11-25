@@ -14,7 +14,10 @@ struct SimHandle {
     uint8_t current_buffer = 0;
 
     DeviceBuffer& read() noexcept { return d_buffers[current_buffer]; }
+    const DeviceBuffer& read() const noexcept { return d_buffers[current_buffer]; }
     DeviceBuffer& write() noexcept { return d_buffers[current_buffer ^ 1]; }
+    const DeviceBuffer& write() const noexcept { return d_buffers[current_buffer ^ 1]; }
+
     void swap() noexcept { current_buffer ^= 1; }
 };
 
@@ -104,6 +107,24 @@ SimResult sim_step(SimHandle* handle, int32_t count) {
     }
 
     CUDA_TRY(cudaDeviceSynchronize());
+
+    return SIM_RESULT_OKAY;
+}
+
+SimResult sim_download(const SimHandle* handle, float *dst, size_t dst_count) {
+    if (handle == NULL) {
+        return SIM_RESULT_INVALID_HANDLE;
+    }
+
+    const auto device = handle->device_idx;
+    const auto& src = handle->read();
+
+    if (dst == NULL || dst_count != src.count()) {
+        return SIM_RESULT_INVALID_ARGUMENT;
+    }
+
+    CUDA_TRY(cudaSetDevice(device));
+    CUDA_TRY(cudaMemcpy(dst, src.data(), src.size(), cudaMemcpyDeviceToHost));
 
     return SIM_RESULT_OKAY;
 }

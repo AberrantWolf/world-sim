@@ -33,6 +33,7 @@ unsafe extern "C" {
         value: f32,
     ) -> SimResult;
     pub fn sim_step(handle: *mut SimHandle, count: i32) -> SimResult;
+    pub fn sim_download(handle: *const SimHandle, dst: *mut f32, dst_count: usize) -> SimResult;
     pub fn sim_destroy(handle: *mut SimHandle);
 }
 

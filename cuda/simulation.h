@@ -60,6 +60,18 @@ SimResult sim_fill_rect(SimHandle *handle, int32_t x, int32_t y, int32_t size_x,
 //
 SimResult sim_step(SimHandle *handle, int32_t count);
 
+// ===== sim_download
+//
+// Download the complete state of the simulation. Data copied out is row-major.
+// Blocks on any pending GPU work and until the copy is complete.
+//
+// Valid arguments:
+// - handle != NULL
+// - dst has space for at least dst_count elements
+// - dst_count == (width * height) from simulation creation
+//
+SimResult sim_download(const SimHandle *handle, float *dst, size_t dst_count);
+
 // ===== sim_destroy
 //
 // Destroy the simulation. All handles associated with this simulation become
